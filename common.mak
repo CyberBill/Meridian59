@@ -74,7 +74,7 @@ PALETTEFILE = $(TOPDIR)\blakston.pal
 
 CCOMMONFLAGS = -nologo -DBLAK_PLATFORM_WINDOWS -DWIN32 \
              /wd4996 /wd4312 /FC \
-	     -TP -WX -GR- -EHsc- -MP -MT -Zi
+	     -TP -WX -GR- -EHsc- -MP -MT -Zi -std:c++17
 
 CNORMALFLAGS = $(CCOMMONFLAGS) -W2 /Ox
 CDEBUGFLAGS = $(CCOMMONFLAGS) -W3 -DBLAKDEBUG
