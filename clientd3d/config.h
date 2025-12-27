@@ -89,6 +89,7 @@ typedef struct {
 
    bool colorcodes;
    int lastPasswordChange;
+   int language;
 
    int soundLibrary;
    bool rosterbmps;         // unused, should be removed
@@ -131,6 +132,8 @@ void SaveSettings(void);
 
 void ConfigLoad(void);
 void ConfigSave(void);
+
+void SetLanguage();
 
 void WindowSettingsSave(void);
 void WindowSettingsLoad(WINDOWPLACEMENT *w);

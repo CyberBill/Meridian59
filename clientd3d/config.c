@@ -52,6 +52,7 @@ static char INIBrowser[]     = "Browser";
 static char INIDefaultBrowser[] = "DefaultBrowser";
 static char INIVersion[]     = "INIVersion";
 static char INILastPass[]    = "Sentinel";
+static char INILanguage[]    = "Language";
 static char INISoundLibrary[] = "SoundLibrary";
 static char INICacheBalance[] = "CacheBalance";
 static char INIObjectCacheMin[] = "ObjectCacheMin";
@@ -254,6 +255,8 @@ void ConfigLoad(void)
    config.map_annotations = GetConfigInt(interface_section, INIMapAnnotations, true, ini_file);
 
    config.lastPasswordChange = GetConfigInt(misc_section, INILastPass, 0, ini_file);
+   config.language = GetConfigInt(misc_section, INILanguage, 0, ini_file);
+   SetLanguage();
 
    /* charlie: 
 		This works like this , the balance is a % between 10%-90% which controls how much of the memory
@@ -377,6 +380,7 @@ void ConfigSave(void)
    WriteConfigInt(interface_section, INIMapAnnotations, config.map_annotations, ini_file);
    
    WriteConfigInt(misc_section, INILastPass, config.lastPasswordChange, ini_file);
+   WriteConfigInt(misc_section, INILanguage, config.language, ini_file);
 
    WriteConfigInt(misc_section, INITextAreaSize, config.text_area_size, ini_file);
 
@@ -460,6 +464,31 @@ void ConfigOverride(LPCTSTR pszCmdLine)
      config.download_time = 195;
    }
 }
+
+void SetLanguage()
+{
+   if (config.language != 0)
+   {
+      LANGID langId;
+      switch (config.language)
+      {
+      case 1:  // English;
+         langId = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
+         break;
+      case 2:  // German;
+         langId = MAKELANGID(LANG_GERMAN, SUBLANG_GERMAN);
+         break;
+      case 3:  // Portuguese;
+         langId = MAKELANGID(LANG_PORTUGUESE, SUBLANG_PORTUGUESE_BRAZILIAN);
+         break;
+      default:  // Default (User default language)
+         langId = MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT);
+         break;
+      }
+      SetThreadUILanguage(langId);
+   }
+}
+
 /************************************************************************/
 void WindowSettingsSave(void)
 {
