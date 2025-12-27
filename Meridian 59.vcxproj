@@ -1438,6 +1438,7 @@
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)run\localclient\</OutDir>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(ProjectDir)external\libarchive;$(ProjectDir)external\libpng;$(ProjectDir)external\wavemix;$(ProjectDir)external\zlib;$(ProjectDir)clientd3d\debug;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>nmake</NMakeBuildCommandLine>
