@@ -78,6 +78,7 @@ static BOOL fMapCacheValid = FALSE;
 static struct map_wall_cache_t *pMapWalls = NULL;
 static float mapCacheScale = 0.0;
 static int mapNumCacheWalls = 0;
+static constexpr int MAX_ANNOTATION_TEXT_ZOOM = 133; // Unit-less number which helps define when we stop displaying annotation text
 
 /* local function prototypes */
 static void MapDrawMiniMapWalls(HDC hdc, int x, int y, room_type *room);
@@ -259,7 +260,7 @@ void MapDraw( HDC hdc, BYTE *bits, AREA *area, room_type *room, int width, bool 
 	    else
 	       MapDrawWalls(hdc, xoffsetMiniMap, yoffsetMiniMap, scaleMiniMap, room);
        if (config.map_annotations)
-          MapDrawAnnotations(hdc, room->annotations, xoffsetMiniMap, yoffsetMiniMap, scaleMiniMap, TRUE, scaleMiniMap > 0.0075f);
+          MapDrawAnnotations(hdc, room->annotations, xoffsetMiniMap, yoffsetMiniMap, scaleMiniMap, TRUE, scaleMiniMap > (1.0f / MAX_ANNOTATION_TEXT_ZOOM));
 	    MapDrawObjects(hdc, room->contents, xoffsetMiniMap, yoffsetMiniMap, scaleMiniMap);
 	    MapDrawPlayer(hdc, xoffsetMiniMap, yoffsetMiniMap, scaleMiniMap);
 	 }
@@ -546,7 +547,7 @@ void MapDrawAnnotations(HDC hdc, MapAnnotation *annotations, int x, int y, float
    }
 
    // Draw Map Annotation Text
-   if(bDrawText)
+   if (bDrawText)
    {
       // Select new font
       hOldFont = (HFONT) SelectObject(hdc, GetFont(FONT_MAP_ANNOTATIONS));
