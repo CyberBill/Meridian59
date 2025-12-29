@@ -61,6 +61,7 @@ KODINCLUDEDIR = $(KODDIR)\include
 PALETTEFILE = $(TOPDIR)\blakston.pal
 
 # compiler specs -- uses multi-threaded DLL C runtime library
+# /FC displays full path of source code file in diagnostics
 # /TP builds C files in C++ mode
 # /WX treats warnings as errors
 # /GR- turns off RTTI
@@ -73,7 +74,7 @@ PALETTEFILE = $(TOPDIR)\blakston.pal
 
 CCOMMONFLAGS = -nologo -DBLAK_PLATFORM_WINDOWS -DWIN32 \
              /wd4996 /wd4312 /FC \
-	     -TP -WX -GR- -EHsc- -MP -MT -Zi -std:c++20
+	     -TP -WX -GR- -EHsc- -MP -MT -Zi
 
 CNORMALFLAGS = $(CCOMMONFLAGS) -W2 /Ox
 CDEBUGFLAGS = $(CCOMMONFLAGS) -W3 -DBLAKDEBUG
