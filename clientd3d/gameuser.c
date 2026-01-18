@@ -766,7 +766,7 @@ ID GetTargetIDFromString(HINSTANCE hInst, char* name, int* out_error_code)
    if (object_list)
    {
       int match_count = 0;
-      int name_len = strlen(name);
+      size_t name_len = strlen(name);
 
       //	Try to find named target in list.
       while (rcnObject = (room_contents_node*)list_nth_item(object_list, iListIndex))
