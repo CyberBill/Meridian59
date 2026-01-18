@@ -25,6 +25,11 @@ typedef struct {
    BYTE        school;
 } spell;     /* A magical spell--must have obj struct to use in owner drawn list box */
 
+typedef struct {
+   spell* sp;
+   char* target;
+} spell_action;  // A 'spell_action' ties together a spell and its target string
+
 void SpellsInit(void);
 void SpellsExit(void);
 
@@ -38,7 +43,7 @@ spell *FindSpellByID(ID id);
 char *GetSpellName(char *str, char **next);
 
 void UserCastSpell(void);
-void SpellCast(spell *sp);
+void SpellCast(spell_action *spa);
 void MenuSpellChosen(int index);
 
 object_node* GetSpellObject( ID idFind );

@@ -359,14 +359,23 @@ void UserCastSpell(void)
    
    list_delete(sel_list);
    
-   PerformAction(A_CASTSPELL, sp);
+   spell_action spa;
+   spa.sp = sp;
+   spa.target = NULL;
+   PerformAction(A_CASTSPELL, &spa);
 }
 /********************************************************************/
 /*
  * SpellCast:  User wants to cast given spell.
  */
-void SpellCast(spell *sp)
+void SpellCast(spell_action *spa)
 {
+   if(spa == NULL)
+      return;
+   spell *sp = spa->sp;
+   if(sp == NULL)
+      return;
+
    if (GetPlayer()->viewID && (GetPlayer()->viewID != GetPlayer()->id))
    {
      if (!(GetPlayer()->viewFlags & REMOTE_VIEW_CAST))
@@ -380,23 +389,51 @@ void SpellCast(spell *sp)
       return;
    }
 
-	if( GetUserTargetID() != INVALID_ID )
-	{
-    ID id = GetUserTargetID();
-		//	User has target already selected.
-		if (id == GetPlayer()->id || FindVisibleObjectById(id))
+   ID target_id = INVALID_ID;
+   
+   // See if user specified target on command line
+   if(spa->target != NULL && spa->target[0] != '\0')
+   {
+      int error_code = NULL;
+      target_id = GetTargetIDFromString(hInst, spa->target, &error_code);
+      if (target_id == INVALID_ID)
+      {
+         char *error_string;
+         if (error_code == TARGET_ERROR_AMBIGUOUS)
+         {
+            error_string = GetString(hInst, IDS_DUPLICATETARGETNAME);
+         }
+         else
+         {
+            error_string = GetString(hInst, IDS_NOTARGETFOUND);
+         }
+
+         GameMessage(error_string);
+         return;
+      }
+   }
+	else
+   {
+      target_id = GetUserTargetID();
+	}
+
+   if(target_id != INVALID_ID)
+   {
+      //	User has target already selected.
+		if (target_id == GetPlayer()->id || FindVisibleObjectById(target_id))
 		{
 			/* Make temporary list for sending to server */
-			temp_obj.id = GetUserTargetID();
+			temp_obj.id = target_id;
 			temp_obj.temp_amount = 1;
 			RequestCast( sp->obj.id, temp_list );
 		}
 		else	//	Target cannot be seen.
 			GameMessage( GetString( hInst, IDS_TARGETNOTVISIBLEFORCAST ) );
 		return;
-	}
+   }
 
-   /* Get target object from user */
+   // User has not specified a target, and this spell needs one - so pop up the dialogue box and get it
+
    /* Save spell # */
    use_spell = sp->obj.id;
    
@@ -592,7 +629,10 @@ void MenuSpellChosen(int id)
       return;
    }
 
-   PerformAction(A_CASTSPELL, sp);
+   spell_action spa;
+   spa.sp = sp;
+   spa.target = NULL;
+   PerformAction(A_CASTSPELL, &spa);
 }
 
 /********************************************************************/
