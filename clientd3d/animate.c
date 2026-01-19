@@ -103,6 +103,8 @@ void AnimationTimerProc(HWND hwnd, UINT timer)
    last_animate_time = now;
    timeLastFrame = dt;
 
+   UpdateAutoActions();
+
    /* Send event to modules */
    ModuleEvent(EVENT_ANIMATE, dt);
 

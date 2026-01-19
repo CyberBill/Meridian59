@@ -49,5 +49,6 @@ void UserTargetSelf(void);
 ID GetTargetIDFromString(HINSTANCE hInst, char* name, int* out_error_code);
 
 void GotObjectContents(ID object_id, list_type contents);
+void UpdateAutoActions();
 
 #endif /* #ifndef _GAMEUSER_H */

@@ -12,6 +12,7 @@
 #include "client.h"
 
 #define ATTACK_DELAY 1000  // Minimum number of milliseconds between user attacks
+#define AUTO_ATTACK_DELAY 1200  // Milliseconds between auto-attacks, slightly higher to account for input latency
 
 extern player_info player;
 
@@ -76,6 +77,41 @@ void UserAttack(int action)
    ObjectListDestroy(sel_list);
    list_delete(object_list);
 }
+
+void UpdateAutoAttack()
+{
+   // Make sure that user doesn't attack too often
+   // (Shared timer with normal attack methods - but slightly longer due to input limits)
+   DWORD now = timeGetTime();
+   if (now - last_attack_time < AUTO_ATTACK_DELAY)
+      return;
+   
+   // TODO: Ensure that the user has auto-attack enabled.
+
+   // If the player doesn't have a target, or is targetting themselves, do nothing.
+	if (idTarget == INVALID_ID || idTarget == player.id)
+	{
+      return;
+   }
+   
+   // Set the attack timer now that we've cleared the basic checks
+   last_attack_time = now;
+
+   // Target must be visible
+	if (FindVisibleObjectById(idTarget))
+		RequestAttack(ATTACK_NORMAL, idTarget);
+	else
+	   GameMessage(GetString(hInst, IDS_TARGETNOTVISIBLEFORATTACK));
+}
+
+void UpdateAutoActions()
+{
+   // Auto-attack
+   UpdateAutoAttack();
+
+   // TODO: Auto-Run
+}
+
 /************************************************************************/
 void UserAttackClosest(int action)
 {
